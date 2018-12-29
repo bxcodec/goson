@@ -18,7 +18,31 @@ type Node struct {
 }
 
 type MapNode map[string]*Node
+
 type MapString map[string]interface{}
+
+type ArrMapNode []MapNode
+
+func (a ArrMapNode) generateJSONSchema(isrequired bool) MapString {
+	res := map[string]interface{}{}
+	res["type"] = "array"
+	if len(a) > 0 {
+		if key := getKeymapPrefix(a[0], key_generic_array_item); key != "" {
+			// INDICATE GENERIC ARRAY-ITEMS
+			node := a[0][key]
+			itemsSchema := map[string]interface{}{
+				"type": node.Type,
+			}
+			res["items"] = itemsSchema
+
+		} else {
+			res["items"] = a[0].generateJSONSchema(false)
+		}
+
+	}
+
+	return res
+}
 
 func (m MapString) ToJSON() ([]byte, error) {
 	return json.Marshal(m)
@@ -33,59 +57,59 @@ func getKeymapPrefix(item MapNode, prefix string) string {
 	return ""
 }
 
-func (m MapNode) generateJSONSchema() MapString {
+func (m MapNode) generateJSONSchema(isrequired bool) MapString {
 	res := map[string]interface{}{}
 	res["type"] = "object"
 	mapNode := map[string]*Node(m)
 	properties := map[string]interface{}{}
+	required := []string{}
 	for k, v := range mapNode {
 		if v.Type == "object" {
 			mapNode := v.Value.(MapNode)
-			schema := mapNode.generateJSONSchema()
+			schema := mapNode.generateJSONSchema(false)
 			properties[k] = schema
 		} else if v.Type == "array" {
-			itemsSchema := map[string]interface{}{}
 			arrMapNode := v.Value.([]MapNode)
-			if len(arrMapNode) > 0 {
-				schema := map[string]interface{}{}
-				if key := getKeymapPrefix(arrMapNode[0], key_generic_array_item); key != "" {
-					// INDICATE GENERIC ARRAY-ITEMS
-					node := arrMapNode[0][key]
-					itemsSchema := map[string]interface{}{
-						"type": node.Type,
-					}
-					schema = map[string]interface{}{
-						"type":  "array",
-						"items": itemsSchema,
-					}
-				} else {
-					itemsSchema = arrMapNode[0].generateJSONSchema()
-					schema = map[string]interface{}{
-						"type":  v.Type,
-						"items": itemsSchema,
-					}
-				}
-
-				properties[k] = schema
-			}
+			resMapNode := ArrMapNode(arrMapNode)
+			properties[k] = resMapNode.generateJSONSchema(false)
 		} else {
 			properties[k] = map[string]interface{}{
 				"type": v.Type,
 			}
 		}
+		required = append(required, k)
 	}
 	res["properties"] = properties
+	if isrequired {
+		res["required"] = required
+	}
 	return res
 }
 
 func GenerateJSONSchema(jsonStr string) (MapString, error) {
-	raw := map[string]interface{}{}
-	err := json.Unmarshal([]byte(jsonStr), &raw)
-	if err != nil {
-		return nil, err
+	res := MapString{}
+
+	if !strings.HasPrefix(jsonStr, "[") {
+		raw := map[string]interface{}{}
+		err := json.Unmarshal([]byte(jsonStr), &raw)
+		if err != nil {
+			return nil, err
+		}
+		mapRes := parseNonArray(raw)
+		res = mapRes.generateJSONSchema(true)
+	} else {
+		// TODO: Array Documents
+		raw := []interface{}{}
+		err := json.Unmarshal([]byte(jsonStr), &raw)
+		if err != nil {
+			return nil, err
+		}
+		arrMapNode := parseArray(raw)
+		arrMapRes := ArrMapNode(arrMapNode)
+		res = arrMapRes.generateJSONSchema(true)
 	}
-	mapRes := parseNonArray(raw)
-	return mapRes.generateJSONSchema(), nil
+
+	return res, nil
 }
 
 func parseArray(raw []interface{}) []MapNode {
@@ -98,9 +122,19 @@ func parseArray(raw []interface{}) []MapNode {
 			mp := item.(map[string]interface{})
 			temp = parseNonArray(mp)
 		} else if contentType == "array" {
-			// TODO
+			// TODO: add logic here for nested array. For example: {"data":[[1,2,4],[3,6,1]]}
+			// Currently it's only set the type is array, but the items is not defined
+			// For example:
+			/*
+				{"properties": {
+						"data": {
+							"type": "array"
+						}
+					},
+				"required": ["data"],
+				"type": "object"}
+			*/
 		} else {
-			//  TODO
 			node := &Node{
 				Type:  contentType,
 				Value: item,
@@ -128,7 +162,6 @@ func parseNonArray(raw map[string]interface{}) MapNode {
 			}
 			mapNode[key] = node
 		} else if contentType == "array" {
-			// TODO If array is exists
 			node := &Node{
 				Key:   key,
 				Value: parseArray(val.([]interface{})),
@@ -163,5 +196,4 @@ func getType(item interface{}) string {
 		var r = reflect.TypeOf(item)
 		return fmt.Sprintf("%s", r.String())
 	}
-	return ""
 }
