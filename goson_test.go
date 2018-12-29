@@ -34,9 +34,9 @@ func TestJSONSchema(t *testing.T) {
 	if err != nil {
 		t.Error("Expected nil; but got: ", err)
 	}
-	jby, err := schema.ToJSON()
+	jbyt, err := schema.ToJSON()
 	if err != nil {
 		t.Error("Expected nil; but got: ", err)
 	}
-	fmt.Println("[SCHEMA] ", string(jby))
+	fmt.Println("[SCHEMA] ", string(jbyt))
 }
