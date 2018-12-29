@@ -6,7 +6,7 @@ Currently with MVP release ( target: stable v1), there are a few things we need 
 You can view the list in the: https://waffle.io/bxcodec/goson
 
 ## Contributions
-I really appreciate for everyone who willing to help to finish this, you can put any task from https://waffle.io/bxcodec/goson.
+I really appreciate for everyone who willing to help to finish this, you can choose any task from https://waffle.io/bxcodec/goson and make a PR to this repository.
 
 The task with label `epic` means it's need to finish ASAP.
 
