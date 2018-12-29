@@ -60,8 +60,6 @@ func (m MapNode) generateJSONSchema() MapString {
 					}
 				} else {
 					itemsSchema = arrMapNode[0].generateJSONSchema()
-					fmt.Printf("MAPNODE: %+v\n", arrMapNode[0])
-
 					schema = map[string]interface{}{
 						"type":  v.Type,
 						"items": itemsSchema,
@@ -87,9 +85,6 @@ func GenerateJSONSchema(jsonStr string) (MapString, error) {
 		return nil, err
 	}
 	mapRes := parseNonArray(raw)
-	for k, v := range mapRes {
-		fmt.Printf("key: %v, val: %+v \n", k, v)
-	}
 	return mapRes.generateJSONSchema(), nil
 }
 
@@ -166,7 +161,7 @@ func getType(item interface{}) string {
 		return "array"
 	default:
 		var r = reflect.TypeOf(item)
-		fmt.Printf("Other:%v\n", r)
+		return fmt.Sprintf("%s", r.String())
 	}
 	return ""
 }
