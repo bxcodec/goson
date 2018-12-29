@@ -1,5 +1,5 @@
 # goson
-[WIP] Golang JSON Schema extractor from raw-json string
+⚡️[WIP] Golang JSON Schema extractor from raw-json string
 
 ## Example
 
