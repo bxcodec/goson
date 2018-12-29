@@ -34,16 +34,10 @@ var (
 		"numbers": [3, 4, 5] 
 	}`
 )
-schema,err:=goson.GenerateJSONSchema(example)
-if err != nil {
-    log.Fatal(err)
-}
+schema,_:=goson.GenerateJSONSchema(example)
 
-jbyt, err := schema.ToJSON()
+jbyt, _ := schema.ToJSON()
 
-if err != nil {
-	t.Error("Expected nil; but got: ", err)
-}
 
 fmt.Println(string(jbyt))
 /*
