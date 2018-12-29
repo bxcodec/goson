@@ -1,5 +1,14 @@
 # goson
-⚡️[WIP] Golang JSON Schema extractor from raw-json string
+⚡️[WIP] Golang SIMPLE JSON Schema extractor from raw-json string
+
+## Roadmap
+Currently with MVP release ( target: stable v1), there are a few things we need to finish.
+You can view the list in the: https://waffle.io/bxcodec/goson
+
+## Contributions
+I really appreciate for everyone who willing to help to finish this, you can put any task from https://waffle.io/bxcodec/goson.
+
+The task with label `epic` means it's need to finish ASAP.
 
 ## Example
 
