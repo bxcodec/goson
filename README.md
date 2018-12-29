@@ -45,59 +45,59 @@ fmt.Println(string(jbyt))
 // Or in Formatted data:
 /*
 {
-	"properties": {
-		"arr": {
-			"items": {
-				"properties": {
-					"site": {
-						"type": "string"
-					},
-					"url": {
-						"type": "string"
-					}
-				},
-				"type": "object"
-			},
-			"type": "array"
-		},
-		"email": {
-			"type": "string"
-		},
-		"id": {
-			"type": "string"
-		},
-		"name": {
-			"type": "string"
-		},
-		"numbers": {
-			"items": {
-				"type": "number"
-			},
-			"type": "array"
-		},
-		"tags": {
-			"items": {
-				"type": "string"
-			},
-			"type": "array"
-		},
-		"user": {
+ "properties": {
+	"arr": {
+		"items": {
 			"properties": {
-				"address": {
+				"site": {
 					"type": "string"
 				},
-				"age": {
-					"type": "number"
-				},
-				"phones": {
-					"items": {
-						"type": "string"
-					},
-					"type": "array"
+				"url": {
+					"type": "string"
 				}
 			},
 			"type": "object"
-		}
+		},
+		"type": "array"
+	},
+	"email": {
+		"type": "string"
+	},
+	"id": {
+		"type": "string"
+	},
+	"name": {
+		"type": "string"
+	},
+	"numbers": {
+		"items": {
+			"type": "number"
+		},
+		"type": "array"
+	},
+	"tags": {
+		"items": {
+			"type": "string"
+		},
+		"type": "array"
+	},
+	"user": {
+		"properties": {
+			"address": {
+				"type": "string"
+			},
+			"age": {
+				"type": "number"
+			},
+			"phones": {
+				"items": {
+					"type": "string"
+				},
+				"type": "array"
+			}
+		},
+		"type": "object"
+	}
 	},
 	"type": "object"
 }
