@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/bxcodecx/goson"
+	"github.com/bxcodec/goson"
 	"github.com/spf13/afero"
 )
 
