@@ -3,6 +3,9 @@ package goson
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
+	"net/http"
 	"reflect"
 	"strings"
 )
@@ -110,6 +113,24 @@ func GenerateJSONSchema(jsonStr string) (MapString, error) {
 	}
 
 	return res, nil
+}
+
+func GenerateJSONSchemaFromURL(url string) (MapString, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+
+	return GenerateJSONSchema(string(body))
+}
+
+func GenerateJSONSchemaFromFile(ir io.Reader) (MapString, error) {
+	body, _ := ioutil.ReadAll(ir)
+
+	return GenerateJSONSchema(string(body))
 }
 
 func parseArray(raw []interface{}) []MapNode {
