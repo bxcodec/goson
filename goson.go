@@ -128,7 +128,12 @@ func GenerateJSONSchemaFromURL(url string) (MapString, error) {
 }
 
 func GenerateJSONSchemaFromFile(filePath string) (MapString, error) {
-	file, _ := os.Open(filePath)
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
 	body, _ := ioutil.ReadAll(file)
 
 	return GenerateJSONSchema(string(body))
