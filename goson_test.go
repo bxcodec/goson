@@ -2,13 +2,11 @@ package goson_test
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/bxcodec/goson"
-	"github.com/spf13/afero"
 )
 
 var (
@@ -52,6 +50,7 @@ var (
 		"numbers": [3, 4, 5] 
 	}]`
 	exampleArr2 = `[1 ,3 ,4 ,5]`
+	filePath    = "./testfile.json"
 )
 
 func TestJSONSchema(t *testing.T) {
@@ -108,12 +107,7 @@ func TestJSONSchemaFromURL(t *testing.T) {
 }
 
 func TestJSONSchemaFromFile(t *testing.T) {
-	appFS := afero.NewMemMapFs()
-	appFS.MkdirAll("testdata", 0755)
-	afero.WriteFile(appFS, "testdata/data.json", []byte(example), 0644)
-	file, _ := appFS.Open("testdata/data.json")
-
-	schema, err := goson.GenerateJSONSchemaFromFile(file.(io.Reader))
+	schema, err := goson.GenerateJSONSchemaFromFile(filePath)
 	if err != nil {
 		t.Error("Expected nil; but got: ", err)
 	}

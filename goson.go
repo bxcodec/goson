@@ -3,9 +3,9 @@ package goson
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -127,8 +127,9 @@ func GenerateJSONSchemaFromURL(url string) (MapString, error) {
 	return GenerateJSONSchema(string(body))
 }
 
-func GenerateJSONSchemaFromFile(ir io.Reader) (MapString, error) {
-	body, _ := ioutil.ReadAll(ir)
+func GenerateJSONSchemaFromFile(filePath string) (MapString, error) {
+	file, _ := os.Open(filePath)
+	body, _ := ioutil.ReadAll(file)
 
 	return GenerateJSONSchema(string(body))
 }
