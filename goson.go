@@ -122,7 +122,10 @@ func GenerateJSONSchemaFromURL(url string) (MapString, error) {
 	}
 
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
 
 	return GenerateJSONSchema(string(body))
 }
@@ -134,7 +137,10 @@ func GenerateJSONSchemaFromFile(filePath string) (MapString, error) {
 	}
 
 	defer file.Close()
-	body, _ := ioutil.ReadAll(file)
+	body, err := ioutil.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
 
 	return GenerateJSONSchema(string(body))
 }
