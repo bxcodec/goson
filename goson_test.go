@@ -30,6 +30,26 @@ var (
 		"numbers": [3, 4, 5],
 		"nested":[[1,2], [2,4]] 
 	}`
+	malformedJSON = `{
+		"id": "uk123",
+		"name": "tom",
+		"email": "tom@gmail.com",
+		"user": {
+			"address": "Sidikalang"
+			"age": 23,
+			"phones": [
+				"08234239523",
+				"08234239523"
+			]
+		},
+		"arr": [{
+			"site": "string",
+			"url": "string"
+		}],
+		"tags": ["go", "js"],
+		"numbers": [3, 4, 5],
+		"nested":[[1,2], [2,4]] 
+	}`
 	exampleArr = `[{
 		"id": "uk123",
 		"name": "tom",
@@ -49,8 +69,28 @@ var (
 		"tags": ["go", "js"],
 		"numbers": [3, 4, 5] 
 	}]`
-	exampleArr2 = `[1 ,3 ,4 ,5]`
-	filePath    = "./testfile.json"
+	malformedArray = `[{
+		"id": "uk123",
+		"name": "tom",
+		"email": "tom@gmail.com",
+		"user": {
+			"address": "Sidikalang"
+			"age": 23,
+			"phones": [
+				"08234239523",
+				"08234239523"
+			]
+		},
+		"arr": [{
+			"site": "string",
+			"url": "string"
+		}],
+		"tags": ["go", "js"],
+		"numbers": [3, 4, 5] 
+	}]`
+	exampleArr2   = `[1 ,3 ,4 ,5]`
+	filePath      = "./testfile.json"
+	wrongFilePath = "./testdata/testfile.json"
 )
 
 func TestJSONSchema(t *testing.T) {
@@ -63,6 +103,20 @@ func TestJSONSchema(t *testing.T) {
 		t.Error("Expected nil; but got: ", err)
 	}
 	fmt.Println("[SCHEMA] ", string(jbyt))
+}
+
+func TestJSONSchemaWithMalformedJSON(t *testing.T) {
+	_, err := goson.GenerateJSONSchema(malformedJSON)
+	if err == nil {
+		t.Error("Expected nil; but got: ", err)
+	}
+}
+
+func TestJSONSchemaWithMalformedArray(t *testing.T) {
+	_, err := goson.GenerateJSONSchema(malformedArray)
+	if err == nil {
+		t.Error("Expected nil; but got: ", err)
+	}
 }
 
 func TestJSONSchemaArray(t *testing.T) {
@@ -106,6 +160,13 @@ func TestJSONSchemaFromURL(t *testing.T) {
 	fmt.Println("[SCHEMA] ", string(jbyt))
 }
 
+func TestJSONSchemaFromURL_WrongEndpoint(t *testing.T) {
+	_, err := goson.GenerateJSONSchemaFromURL("test.qwerty.com:1234/post/1")
+	if err == nil {
+		t.Error("Expected nil; but got: ", err)
+	}
+}
+
 func TestJSONSchemaFromFile(t *testing.T) {
 	schema, err := goson.GenerateJSONSchemaFromFile(filePath)
 	if err != nil {
@@ -116,4 +177,11 @@ func TestJSONSchemaFromFile(t *testing.T) {
 		t.Error("Expected nil; but got: ", err)
 	}
 	fmt.Println("[SCHEMA] ", string(jbyt))
+}
+
+func TestJSONSchemaFromFileWithWrongPath(t *testing.T) {
+	_, err := goson.GenerateJSONSchemaFromFile(wrongFilePath)
+	if err == nil {
+		t.Error("Expected nil; but got: ", err)
+	}
 }
