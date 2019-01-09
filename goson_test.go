@@ -28,7 +28,8 @@ var (
 		}],
 		"tags": ["go", "js"],
 		"numbers": [3, 4, 5],
-		"nested":[[1,2], [2,4]] 
+		"nested":[[1,2], [2,4]],
+		"null": null
 	}`
 	exampleArr = `[{
 		"id": "uk123",
