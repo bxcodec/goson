@@ -225,6 +225,8 @@ func getType(item interface{}) string {
 		return "number"
 	case []interface{}:
 		return "array"
+	case nil:
+		return "null"
 	default:
 		var r = reflect.TypeOf(item)
 		return fmt.Sprintf("%s", r.String())
